@@ -13,19 +13,20 @@
 
 class CRobo {
 private:
-  EnumRoboStatus Status;
   EnumTipoExecucao TipoExecucao;
   EnumHorarios HorarioInicial;
   EnumHorarios HorarioFinal;
+  int QuantidadeOperacoesSimultaneas;
   double Lucro;
 public:
   bool EmProcessamento;
   
-  CRobo(const EnumHorarios _HorarioInicial, const EnumHorarios _HorarioFinal);
+  CRobo(const EnumHorarios _HorarioInicial, const EnumHorarios _HorarioFinal, const int _QuantidadeOperacoesSimultaneas);
   ~CRobo();
   
   EnumRoboStatus GetStatus();
   EnumTipoExecucao GetTipoExecucao();
+  int GetQuantidadeOperacoesSimultaneas();
   void AdicionarLucro(const double Resultado);
 };
 
@@ -34,12 +35,13 @@ public:
 CRobo *Robo;
 
 
-CRobo::CRobo(const EnumHorarios _HorarioInicial, const EnumHorarios _HorarioFinal) {
+CRobo::CRobo(const EnumHorarios _HorarioInicial, const EnumHorarios _HorarioFinal, const int _QuantidadeOperacoesSimultaneas) {
   Lucro = 0;
   EmProcessamento = false;
   
   HorarioInicial = _HorarioInicial;
   HorarioFinal = _HorarioFinal;
+  QuantidadeOperacoesSimultaneas = _QuantidadeOperacoesSimultaneas;
   
   if (MQLInfoInteger(MQL_TESTER)) {
     TipoExecucao = Backteste;
@@ -62,6 +64,10 @@ EnumRoboStatus CRobo::GetStatus() {
 
 EnumTipoExecucao CRobo::GetTipoExecucao() {
   return TipoExecucao;
+}
+
+int CRobo::GetQuantidadeOperacoesSimultaneas() {
+  return QuantidadeOperacoesSimultaneas;
 }
 
 void CRobo::AdicionarLucro(const double Resultado) {
