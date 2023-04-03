@@ -7,7 +7,7 @@
 #property link      "https://www.andersonpavani.com.br/market/robos"
 
 
-enum EnumParStatus { Leilao, Pausado, Pronto, Comprado, Vendido };
+enum EnumParStatus { Pausado, Pronto, Comprado, Vendido };
 enum EnumDirecao { Compra, Venda, Indefinido };
 enum EnumStatusProcessamento { Entrando, Saindo, Finalizado };
 

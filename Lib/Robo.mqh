@@ -13,6 +13,7 @@
 
 class CRobo {
 private:
+  bool IniciarAposLeilao;
   EnumTipoExecucao TipoExecucao;
   EnumHorarios HorarioInicial;
   EnumHorarios HorarioFinal;
@@ -21,12 +22,13 @@ private:
 public:
   bool EmProcessamento;
   
-  CRobo(const EnumHorarios _HorarioInicial, const EnumHorarios _HorarioFinal, const int _QuantidadeOperacoesSimultaneas);
+  CRobo(const EnumHorarios _HorarioInicial, const EnumHorarios _HorarioFinal, const int _QuantidadeOperacoesSimultaneas, const bool _IniciarAposLeilao);
   ~CRobo();
   
   EnumRoboStatus GetStatus();
   EnumTipoExecucao GetTipoExecucao();
   int GetQuantidadeOperacoesSimultaneas();
+  bool GetIniciarAposLeilao();
   void AdicionarLucro(const double Resultado);
 };
 
@@ -35,13 +37,14 @@ public:
 CRobo *Robo;
 
 
-CRobo::CRobo(const EnumHorarios _HorarioInicial, const EnumHorarios _HorarioFinal, const int _QuantidadeOperacoesSimultaneas) {
+CRobo::CRobo(const EnumHorarios _HorarioInicial, const EnumHorarios _HorarioFinal, const int _QuantidadeOperacoesSimultaneas, const bool _IniciarAposLeilao) {
   Lucro = 0;
   EmProcessamento = false;
   
   HorarioInicial = _HorarioInicial;
   HorarioFinal = _HorarioFinal;
   QuantidadeOperacoesSimultaneas = _QuantidadeOperacoesSimultaneas;
+  IniciarAposLeilao = _IniciarAposLeilao;
   
   if (MQLInfoInteger(MQL_TESTER)) {
     TipoExecucao = Backteste;
@@ -57,6 +60,11 @@ CRobo::~CRobo() {
 
 EnumRoboStatus CRobo::GetStatus() {
   datetime DataHoraInicial = StringToTime(HorarioToString(HorarioInicial));
+  
+  if (TipoExecucao != Backteste && IniciarAposLeilao) {
+    DataHoraInicial = StringToTime("10:00");
+  }
+
   datetime DataHoraFinal = StringToTime(HorarioToString(HorarioFinal));
   
   return TimeCurrent() >= DataHoraInicial && TimeCurrent() < DataHoraFinal ? Ativo : ForaHorario;
@@ -68,6 +76,10 @@ EnumTipoExecucao CRobo::GetTipoExecucao() {
 
 int CRobo::GetQuantidadeOperacoesSimultaneas() {
   return QuantidadeOperacoesSimultaneas;
+}
+
+bool CRobo::GetIniciarAposLeilao() {
+  return IniciarAposLeilao;
 }
 
 void CRobo::AdicionarLucro(const double Resultado) {
